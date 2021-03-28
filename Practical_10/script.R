@@ -61,6 +61,7 @@ num_sims <- 1000
 sdev_model1 <- sd(model1$residuals)
 pred_2_based_on_model1 = predict(model1, df2)
 simulated_slopes <- vector()
+simulated_intercepts <- vector()
 for (sim in 1:num_sims){
   # Here we generate random noise that represents the interannual variability between 1972-2000
   random_noise <- rnorm(nrow(df2), mean=0, sd=sdev_model1)
@@ -68,6 +69,7 @@ for (sim in 1:num_sims){
   perturbed_data <- pred_2_based_on_model1 + random_noise
   perturbed_data <- perturbed_data - intercept_model2
   simulated_slopes[sim] <- lm(perturbed_data ~ 0+df2$Year)$coefficients[1]
+  simulated_intercepts[sim] <- lm(perturbed_data ~ df2$Year)$coefficients[1]
 }
 
 hist(simulated_slopes)
